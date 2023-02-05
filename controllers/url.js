@@ -15,6 +15,30 @@ async function generateNewShortUrlhandler(req , res){
     return res.json({id:shortId})
 }
 
+async function redirectUserHandler(req , res){
+    const shortId = req.params.shortId
+    const entry = await URL.findOneAndUpdate(
+    {
+        shortId
+    },
+
+    {
+            $push: {
+                visitHistory: {
+                    timeStamp: Date.now()
+                },
+            },
+    })
+        // res.redirect(entry.redirectUrl)
+        console.log("logging entry before sending ok --> ", entry)
+        console.log("logging redirectUrl --> ", entry.redirectUrl)
+        // res.json({message: "ok"})
+        res.redirect(entry.redirectUrl)
+
+        console.log("logging after sending the redirect response")
+}
+
 module.exports = {
     generateNewShortUrlhandler,
+    redirectUserHandler,
 }
