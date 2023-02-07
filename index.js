@@ -1,41 +1,48 @@
 const express = require("express")
 const mongoose  = require("mongoose")
-const { connectMongoDB } = require("./connection")
+const bodyParser = require("body-parser")
+// const { connectMongoDB } = require("./connection")
 const URL = require("./models/url")
+const shortID = require("shortid")
 const urlRoute = require('./routes/url')
 const app = express()
 
 const PORT = 8001
 
-mongoose.set('strictQuery', true);
+// mongoose.set('strictQuery', true);
 
-connectMongoDB("mongodb://127.0.0.1:27017/short-url").then(() => console.log("connected to mongoDB"))
+// connectMongoDB("mongodb://127.0.0.1:27017/short-url").then(() => console.log("connected to mongoDB"))
 
-app.use(express.json())
+mongoose.connect('mongodb://localhost/shortly-app', {
+  useNewUrlParser: true, useUnifiedTopology: true
+})
+
+app.use(bodyParser.json())
+app.use(express.urlencoded({extended: false}))
+
+app.post("/", async (req , res) => {
+    console.log("parser request body --> ", req.body.url )
+    const shortendId = shortID.generate()
+    const entry = await URL.create({
+                    shortUrl: shortendId,
+                    longUrl: req.body.url
+       })
+
+    res.json(entry)
 
 
-app.use("/url",urlRoute)
-app.get("/:shortId", async (req , res) =>{
+})
 
-    const shortId = req.params.shortId
-    const entry = await URL.findOneAndUpdate(
-    {
-        shortId
-    },
+app.get("/:shortId" , async (req , res) => {
+    const reqObj = await URL.findOne({shortUrl: req.params.shortId})
+    console.log("req obj -->",reqObj)
+    if(reqObj == null) return res.status(404)
 
-    {
-            $push: {
-                visitHistory: {
-                    timeStamp: Date.now()
-                }
-            }
-    })
-        // res.redirect(entry.redirectUrl)
-        console.log("logging entry before sending ok --> ", entry)
-        console.log("logging redirectUrl --> ", entry.redirectUrl)
-        // res.json({message: "ok"})
-        res.redirect(entry.redirectUrl)
+    reqObj.visitHistory.push({timeStamp: Date.now()})
+    reqObj.save()
 
+    // res.json({message: "ok"})
+    res.redirect(reqObj.longUrl)
 })
 
 app.listen(PORT, () => console.log("server started"))
