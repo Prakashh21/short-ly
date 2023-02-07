@@ -1,9 +1,9 @@
 const express = require("express")
-const { generateNewShortUrlhandler, redirectUserHandler } = require("../controllers/url")
+const { objectCreatorhelper, redirectUrlhelper } = require("../controllers/url")
 const router = express.Router()
 
 
 
-router.post("/",generateNewShortUrlhandler)
-router.get("/:shortId", redirectUserHandler)
+router.post("/",objectCreatorhelper)
+router.get("/:shortId", redirectUrlhelper)
 module.exports = router
