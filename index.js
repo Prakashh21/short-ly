@@ -17,7 +17,7 @@ const PORT = 8001
 
 // connecting to mongoose
 
-mongoose.connect('mongodb://localhost/shortly-app', {
+mongoose.connect('mongodb://127.0.0.1:27017/shortly-app', {
   useNewUrlParser: true, useUnifiedTopology: true
 })
 
