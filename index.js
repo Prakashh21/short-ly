@@ -7,7 +7,9 @@ const shortID = require("shortid")
 const urlRoute = require('./routes/url')
 const router = require("./routes/url")
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 
 const PORT = 8001
 

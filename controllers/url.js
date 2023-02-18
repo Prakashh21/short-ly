@@ -37,7 +37,8 @@ async function redirectUrlhelper(req , res){
     reqObj.save()
 
     // res.json({message: "ok"})
-    res.redirect(reqObj.longUrl)
+    // res.redirect(reqObj.longUrl)
+    res.set('location',reqObj.longUrl).status(301).send()
 }
 
 
