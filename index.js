@@ -5,19 +5,13 @@ const bodyParser = require("body-parser")
 const URL = require("./models/url")
 const shortID = require("shortid")
 const urlRoute = require('./routes/url')
-const router = require("./routes/url")
 const app = express()
 const cors = require('cors')
 
 app.use(cors())
 
-const PORT = 8001
+const PORT = 7400
 
-// mongoose.set('strictQuery', true);
-
-// connectMongoDB("mongodb://127.0.0.1:27017/short-url").then(() => console.log("connected to mongoDB"))
-
-// connecting to mongoose
 
 mongoose.connect('mongodb://127.0.0.1:27017/shortly-app', {
   useNewUrlParser: true, useUnifiedTopology: true
@@ -30,6 +24,14 @@ app.use(bodyParser.json())
 app.use(express.urlencoded({extended: false}))
 
 // routes
+const router = require("./routes/url")
+const userRoute = require("./routes/user")
 app.use("/",router)
+app.use("/user",userRoute)
+
+
+
+
+
 
 app.listen(PORT, () => console.log("server started"))
