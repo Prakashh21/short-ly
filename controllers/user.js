@@ -13,7 +13,7 @@ async function handleUserSignUp(req , res){
         password,
     })
 
-    return res.json({message: "user Created"})
+    return res.json({status:"success", message: "user Created"})
 }
 
 async function handlUserLogin(req , res){
@@ -21,15 +21,19 @@ async function handlUserLogin(req , res){
     const userObj = await User.findOne({email , password});
 
     if(!userObj){
-        return res.json({message: "You're not Signed up , Sign up first"})
+        return res.json({status: "failed", message: "You're not Signed up , Sign up first"})
     }
     const sessionId = uuidv4()
     setUser(sessionId , userObj)
-    res.cookie('uid', sessionId)
-    res.json({message: "user found Welcome to the service", data: userObj})
+    console.log("session id --> ", sessionId)
+    res.cookie("uid", sessionId)
+    return res.json({status:"success",  message: "user found Welcome to the service", data: userObj})
+    // res.redirect("/home").json({message: "user found Welcome to the service", data: userObj}).send()
+
 }
 
 
 module.exports = {
     handleUserSignUp,
+    handlUserLogin
 }

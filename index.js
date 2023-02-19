@@ -12,6 +12,11 @@ app.use(cors())
 
 const PORT = 7400
 
+// app.use(cors({credentials: true, origin: `http://localhost:${PORT}`}));
+
+
+
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/shortly-app', {
   useNewUrlParser: true, useUnifiedTopology: true
